@@ -64,21 +64,20 @@ public class P2P_Host_Detection {
 		protected void map(Object key, Text value, Context context) throws IOException, InterruptedException {
 			String[] line = value.toString().split("\t");
 			String[] sets = line[1].split(",");
-			String bppout = sets[2];
-			bppout = bppout.substring(0, bppout.length() - 1) + "0";
-			String bppin = sets[3];
-			bppin = bppin.substring(0, bppin.length() - 1) + "0";
+//			String bppout = sets[2];
+//			bppout = bppout.substring(0, bppout.length() - 1) + "0";
+//			String bppin = sets[3];
+//			bppin = bppin.substring(0, bppin.length() - 1) + "0";
+//			System.out.println(line[0] + "," + sets[0] + "," + bppout + "," + bppin);
+			Integer bppout = Integer.parseInt(sets[2]);
+			Integer bppin = Integer.parseInt(sets[3]);
+			bppout /= p2p_host_merging_threshold;
+			bppin /= p2p_host_merging_threshold;
 			//System.out.println(line[0] + "," + sets[0] + "," + Integer.toString(bppout) + "," + Integer.toString(bppin));
-			context.write(new Text(line[0] + "," + sets[0] + "," + bppout + "," + bppin), new Text(sets[1]));
+			context.write(new Text(line[0] + "," + sets[0] + "," + Integer.toString(bppout) + "," + Integer.toString(bppin)), new Text(sets[1]));
 		}
 	}
 
-	public static class P2P_Host_Detection_Mapper2 extends Mapper<Object, Text, Text, Text> {
-		@Override
-		protected void map(Object key, Text value, Context context) throws IOException, InterruptedException {
-			context.write(new Text(value.toString().split("\t")[0]), new Text("1"));
-		}
-	}
 
 	public static class P2P_Host_Detection_Reducer extends Reducer<Text, Text, Text, Text> {
 		@Override
@@ -115,22 +114,13 @@ public class P2P_Host_Detection {
 		}
 	}
 
-	public static class P2P_Host_Detection_Reducer2 extends Reducer<Text, Text, Text, Text> {
-		@Override
-		protected void reduce(Text key, Iterable<Text> values, Context context)
-				throws IOException, InterruptedException {
-			if (IP_MAP.containsKey(key.toString())) {
-				context.write(new Text(key.toString()), new Text(IP_MAP.get(key.toString())));
-			} else {
-				context.write(new Text(key.toString()), new Text("Normal"));
-			}
-		}
-	}
+
 
 	private static int p2p_host_detection_threshold = PeerHunter_Conf.P2P_HOST_DETECTION_THRESHOLD_DEFAULT;
 
 	private static int p2p_host_detection_threshold_number_of_ips = PeerHunter_Conf.P2P_HOST_DETECTION_THRESHOLD_NumberOfIPs;
 
+	private static int p2p_host_merging_threshold = PeerHunter_Conf.P2P_HOST_MERGING_THRESHOLD;
 	private static HashMap<String, String> IP_MAP;
 
 	public static void run(String ID) throws IllegalArgumentException, IOException {
@@ -275,36 +265,9 @@ public class P2P_Host_Detection {
 				writer_IDtoIP.println(i);
 			}
 		}
-//		for (String i: map_total_p2p.keySet()) {
-//			writer2.println(i + "\t" + map_total_p2p.get(i));
-//		}
-		writer_IDtoIP.close();
-		writer2.close();
-
-//		for (String i : map_p2p.keySet()) {
-//			int freq = 0;
-//			int threshold = 5;
-//			String[] tmp = i.split("\t");
-//			String[] tmp2 = tmp[1].split(",");
-//			int bppout = Integer.parseInt(tmp2[2]);
-//			int bppin = Integer.parseInt(tmp2[3]);
-//			for (int u = Math.max(0, bppout - threshold); u <= bppout + threshold; ++u)
-//				for (int v = Math.max(0, bppin - threshold); v<= bppin + threshold; ++v) {
-//					String key = tmp[0] + "\t" + tmp2[0] + "," + tmp2[1] + "," + u + "," + v;
-//					if (map_p2p.containsKey(key)) {
-//						freq += map_p2p.get(key);
-//					} else {
-//
-//					}
-//				}
-//			writer2.println(i + "\t" + freq);
-//			if (map_p2p.get(i) >= 0) {
-//				writer_IDtoIP.println(i);
-//			}
-//		}
-
 
 		writer_IDtoIP.close();
 		writer2.close();
+
 	}
 }
