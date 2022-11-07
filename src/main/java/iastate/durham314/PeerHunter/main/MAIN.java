@@ -15,15 +15,15 @@ public class MAIN {
 	public static void Experiment(int ID) throws IllegalArgumentException, IOException, InterruptedException {
 		PrintWriter pw = new PrintWriter(new FileOutputStream(new File("ExTime"), true));
 
-		long st_time = System.currentTimeMillis();
-
-		long st_time_1 = System.currentTimeMillis();
-		P2P_Host_Detection.run(ID + "");
-		long end_time_1 = System.currentTimeMillis();
-
-		long st_time_2 = System.currentTimeMillis();
-		Calculate_Mutual_Contact_Scores.run(ID + "");
-		long end_time_2 = System.currentTimeMillis();
+//		long st_time = System.currentTimeMillis();
+//
+//		long st_time_1 = System.currentTimeMillis();
+//		P2P_Host_Detection.run(ID + "");
+//		long end_time_1 = System.currentTimeMillis();
+//
+//		long st_time_2 = System.currentTimeMillis();
+//		Calculate_Mutual_Contact_Scores.run(ID + "");
+//		long end_time_2 = System.currentTimeMillis();
 
 		long st_time_3 = System.currentTimeMillis();
 		LouvainMain.run(ID + "");

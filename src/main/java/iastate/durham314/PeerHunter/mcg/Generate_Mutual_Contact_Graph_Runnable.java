@@ -14,6 +14,7 @@ public class Generate_Mutual_Contact_Graph_Runnable implements Runnable {
 	private Thread t;
 	private double mutual_contact_score_threshold;
 
+	private int frequency_threshold = PeerHunter_Conf.FREQUENCY_THRESHOLD;
 	Generate_Mutual_Contact_Graph_Runnable(String OutputFolder_, String node1IPSet_, String node2IPSet_, int node1_,
 			int node2_, double mutual_contact_score_threshold_) {
 		node1IPSet = node1IPSet_;
@@ -77,11 +78,11 @@ public class Generate_Mutual_Contact_Graph_Runnable implements Runnable {
 
 			try {
 				tempFreq1 = Calculate_Mutual_Contact_Scores.map_p2p.get(srcIP1 + "\t" + proto + "," + dstIP + "," + bppout + "," + bppin);
-				if(tempFreq1 < 4) {
+				if(tempFreq1 < frequency_threshold) {
 					continue;
 				}
 				tempFreq2 = Calculate_Mutual_Contact_Scores.map_p2p.get(srcIP2 + "\t" + proto + "," + dstIP + "," + bppout + "," + bppin);
-				if(tempFreq2 < 4) {
+				if(tempFreq2 < frequency_threshold) {
 					continue;
 				}
 				sumIp++;
